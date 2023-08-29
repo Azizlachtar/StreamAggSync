@@ -50,8 +50,8 @@ public class SchemaForeachWriter extends ForeachWriter<Row> {
     /**
      * Open method to initialize database connections and statements.
      *
-     * @param partitionId   The partition ID.
-     * @param epochId       The epoch ID.
+     * @param l1   The partition ID.
+     * @param l       The epoch ID.
      * @return True if the open operation succeeds, false otherwise.
      */
     @Override
