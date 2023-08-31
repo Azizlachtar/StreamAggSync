@@ -1,12 +1,10 @@
-/*
-package com.example.projectstagevermegfinal.TopicSupprimer;
+package com.example.projectstagevermegfinal.ASupprimer;
 
-
-import com.example.projectstagevermegfinal.TopicSupprimer.ThoughtMachineStreamingService2;
 import com.example.projectstagevermegfinal.config.DatabaseConnection;
 import com.example.projectstagevermegfinal.config.KafkaConsumer;
 import com.example.projectstagevermegfinal.config.SparkStreamingSessionFactory;
 import com.example.projectstagevermegfinal.data.SchemaToMaintain;
+import com.example.projectstagevermegfinal.services.ThoughtMachineStreamingService2;
 import io.vavr.Tuple2;
 import org.apache.spark.sql.*;
 import org.apache.spark.sql.streaming.StreamingQuery;
@@ -187,4 +185,3 @@ public class AppConfiguration2 {
     }
 }
 
-*/

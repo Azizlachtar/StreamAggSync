@@ -96,40 +96,32 @@ public class ThoughtMachineStreamingService2 {
         return dataset
                 .writeStream()
                 .foreachBatch((batchDF, batchId) -> {
-
                     if (!batchDF.isEmpty()) {
-
-                        Dataset<Row> aggregatedDataset = null;
                         String topicName = batchDF.select("topic").first().getString(0);
-
-
-
-                        if (topicName.equals(schemaToMaintain.getUpdateKafkaStream().getTopicName())) {
-
-                            aggregatedDataset=schemaToMaintain.applyAggregationTopicUpdate(batchDF);
-
-                        }if (topicName.equals(schemaToMaintain.getInsertKafkaStream().getTopicName())) {
-
-                            aggregatedDataset=schemaToMaintain.applyAggregationTopicCreate(batchDF);
-                        }
+                        Dataset<Row> aggregatedDataset = aggregateDataset(schemaToMaintain, batchDF, topicName);
 
                         schemaForeachWriter.open(batchId, System.currentTimeMillis());
-
-                        assert aggregatedDataset != null;
                         for (Row row : aggregatedDataset.collectAsList()) {
 
-                                schemaForeachWriter.process(row);
-                            }
-                            // customForeachWriter.close(null);
-
-
+                            schemaForeachWriter.process(row);
+                        }
                     }
-
                 })
                 .outputMode("update")
                 .trigger(Trigger.ProcessingTime("10 seconds"))
                 .start();
 
+    }
+
+    private Dataset<Row> aggregateDataset(
+            final SchemaToMaintain schemaToMaintain,
+            final Dataset<Row> batchDF,
+            final String topicName) {
+        if (topicName.equals(schemaToMaintain.getUpdateKafkaStream().getTopicName())) {
+            return schemaToMaintain.getAggregationLogicTopic().applyAggregationUpdate(batchDF);
+        }
+
+        return batchDF;
     }
 
     private static Dataset<Row> Aggregation(Dataset<Row> batchDF) {
